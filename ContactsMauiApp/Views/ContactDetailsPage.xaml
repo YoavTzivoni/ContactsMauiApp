@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ContactsMauiApp.Views.ContactDetailsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ContactsMauiApp.Converters"
+    xmlns:viewModels="clr-namespace:ContactsMauiApp.ViewModels"
+    Title="פרטי איש קשר"
+    x:DataType="viewModels:ContactDetailsViewModel"
+    FlowDirection="RightToLeft">
+    <VerticalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="עריכה" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding EditMode}" ThumbColor="Blue" />
+            <Label Text="{Binding EditMode}" />
+        </HorizontalStackLayout>
+        <Image Source="{Binding Contact.ImgPath}" />
+        <Border
+            Margin="10"
+            Padding="10"
+            BackgroundColor="White"
+            Stroke="#E0E0E0"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="3">
+            <Grid ColumnDefinitions="1*,3*" RowDefinitions="auto,auto,auto,auto,auto,auto">
+                <Label
+                    HorizontalOptions="Center"
+                    Text="שם: "
+                    VerticalOptions="Center" />
+                <Entry
+                    Grid.Column="1"
+                    IsReadOnly="{Binding EditMode, Mode=TwoWay}"
+                    Text="{Binding Name, Mode=TwoWay}">
+                    <Entry.Triggers>
+                        <DataTrigger
+                            Binding="{Binding Name.Length}"
+                            TargetType="Entry"
+                            Value="0">
+                            <Setter Property="Background" Value="Red" />
+                        </DataTrigger>
+                    </Entry.Triggers>
+                </Entry>
+                <Label
+                    Grid.Row="1"
+                    HorizontalOptions="Center"
+                    Text="טלפון: "
+                    VerticalOptions="Center" />
+                <Entry
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    IsReadOnly="{Binding EditMode}"
+                    Keyboard="Telephone"
+                    Text="{Binding Phone}" />
+                <Label
+                    Grid.Row="2"
+                    HorizontalOptions="Center"
+                    Text="דואר: "
+                    VerticalOptions="Center" />
+                <Entry
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    IsReadOnly="{Binding EditMode}"
+                    Keyboard="Email"
+                    Text="{Binding Email}" />
+                <Label
+                    Grid.Row="3"
+                    HorizontalOptions="Center"
+                    Text="כתובת: "
+                    VerticalOptions="Center" />
+                <Entry
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    IsReadOnly="{Binding EditMode}"
+                    Keyboard="Text"
+                    Text="{Binding Address}" />
+                <Label
+                    Grid.Row="4"
+                    HorizontalOptions="Center"
+                    Text="תאריך לידה: "
+                    VerticalOptions="Center" />
+                <DatePicker
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Date="{Binding DateOfBirth}"
+                    IsEnabled="{Binding EditMode}" />
+            </Grid>
+        </Border>
+        <Button
+            Margin="10"
+            Command="{Binding BackCommand}"
+            Text="{Binding Id}" />
+    </VerticalStackLayout>
+</ContentPage>

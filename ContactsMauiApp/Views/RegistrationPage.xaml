@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ContactsMauiApp.Views.RegistrationPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ContactsMauiApp.Converters"
+    xmlns:helpers="clr-namespace:ContactsMauiApp.Helpers"
+    xmlns:models="clr-namespace:ContactsMauiApp.ViewModels"
+    xmlns:viewModels="clr-namespace:ContactsMauiApp.ViewModels"
+    Title="RegistrationPage"
+    x:DataType="models:RegistrationViewModel"
+    FlowDirection="RightToLeft">
+    <VerticalStackLayout>
+        <Image
+            Aspect="AspectFit"
+            HeightRequest="185"
+            SemanticProperties.Description="רישום"
+            Source="register.jpg" />
+        <HorizontalStackLayout>
+            <Label
+                Margin="10,0"
+                Style="{StaticResource FormStyle}"
+                Text="{Binding EditModeLabel}"
+                VerticalOptions="Center" />
+            <Switch IsToggled="{Binding EditMode, Mode=TwoWay}" />
+        </HorizontalStackLayout>
+        <Grid
+            Padding="10"
+            ColumnDefinitions="2*,3*,30"
+            ColumnSpacing="5"
+            RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto,auto"
+            RowSpacing="10">
+            <!--  first row  -->
+            <Label
+                IsVisible="{Binding EditMode}"
+                Text="שם לתצוגה:"
+                VerticalOptions="Center" />
+            <VerticalStackLayout Grid.Column="1" IsVisible="{Binding EditMode}">
+                <Entry
+                    Placeholder="Display Name"
+                    ReturnType="Next"
+                    Text="{Binding DisplayName, Mode=TwoWay}"
+                    TextColor="Red">
+                    <Entry.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsDisplayNameValid, Mode=TwoWay}"
+                            TargetType="Entry"
+                            Value="True">
+                            <Setter Property="TextColor" Value="Green" />
+                            <Setter Property="BackgroundColor" Value="Bisque" />
+                        </DataTrigger>
+                    </Entry.Triggers>
+                </Entry>
+                <Label
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsDisplayNameValid, Converter={converters:InverseBoolConverter}}"
+                    Text="name can't be empty"
+                    TextColor="Red"
+                    VerticalOptions="Center" />
+            </VerticalStackLayout>
+            <Label
+                Grid.Column="2"
+                FontFamily="MaterialSymbolsRounded"
+                FontSize="25"
+                IsVisible="{Binding EditMode}"
+                Text="{Binding DisplayNameValidationIcon}"
+                TextColor="{Binding DisplayNameValidationIconColor}"
+                VerticalOptions="Center" />
+            <!--  second row  -->
+            <Label
+                Grid.Row="1"
+                Text="Email"
+                VerticalOptions="Center" />
+            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                <Entry
+                    FlowDirection="LeftToRight"
+                    Keyboard="Email"
+                    Placeholder="Email"
+                    Text="{Binding Email, Mode=TwoWay}" />
+                <Label
+                    FontSize="10"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsEmailValid, Converter={converters:InverseBoolConverter}}"
+                    Text="Wrong mail format"
+                    TextColor="Red"
+                    VerticalOptions="Center" />
+            </VerticalStackLayout>
+            <Label
+                Grid.Row="1"
+                Grid.Column="3"
+                FontFamily="MaterialSymbolsRounded"
+                FontSize="25"
+                Text="{Binding DisplayNameValidationIcon}"
+                TextColor="{Binding DisplayNameValidationIconColor}"
+                VerticalOptions="Center" />
+            <!--  third row  -->
+            <Label
+                Grid.Row="5"
+                Text="סיסמא: "
+                VerticalOptions="Center" />
+            <FlexLayout
+                Grid.Row="5"
+                Grid.Column="1"
+                Direction="Row">
+                <Entry
+                    FlexLayout.Basis="100%"
+                    IsPassword="True"
+                    Placeholder="Password"
+                    Text="{Binding Password}" />
+                <Label
+                    FontFamily="MaterialSymbolsRounded"
+                    FontSize="18"
+                    Text="{x:Static helpers:IconFont.Visibility}"
+                    VerticalOptions="Center"
+                    WidthRequest="50">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span
+                                FontFamily="MaterialSymbolsRounded"
+                                FontSize="18"
+                                Text="{x:Static helpers:IconFont.Visibility}">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShowPasswordCommand}" />
+                                </Span.GestureRecognizers>
+                            </Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </FlexLayout>
+            <Label
+                Grid.Row="5"
+                Grid.Column="2"
+                Margin="10,0,0,0"
+                FontFamily="MaterialSymbolsRounded"
+                FontSize="25"
+                Text="{Binding PasswordValidationIcon}"
+                TextColor="{Binding PasswordValidationIconColor}"
+                VerticalOptions="Center" />
+        </Grid>
+        <Button
+            Margin="10"
+            Command="{Binding RegisterCommand}"
+            Text="{Binding EditModeLabel}" />
+    </VerticalStackLayout>
+</ContentPage>

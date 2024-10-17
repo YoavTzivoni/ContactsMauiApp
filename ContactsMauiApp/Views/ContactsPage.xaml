@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ContactsMauiApp.Views.ContactsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:ContactsMauiApp.Model"
+    xmlns:viewModels="clr-namespace:ContactsMauiApp.ViewModels"
+    Title="ContactsPage"
+    x:DataType="viewModels:ContactsViewModel">
+    <VerticalStackLayout>
+        <Label
+            FontSize="Title"
+            HorizontalOptions="Center"
+            Text="רשימת אנשי הקשר"
+            VerticalOptions="Center" />
+        <Entry Placeholder="filter" Text="{Binding Filter}" />
+        <CollectionView ItemsSource="{Binding Contacts}" SelectionMode="Single">
+            <CollectionView.EmptyView>
+                <Label
+                    FontSize="Large"
+                    Text="הרשימה ריקה"
+                    TextColor="Red" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Contact">
+                    <SwipeView>
+                        <SwipeView.LeftItems>
+                            <SwipeItem
+                                BackgroundColor="Beige"
+                                Command="{Binding DeleteCommand, Source={x:RelativeSource AncestorType={x:Type viewModels:ContactsViewModel}, Mode=FindAncestorBindingContext}}"
+                                CommandParameter="{Binding .}"
+                                Text="מחק" />
+                            <SwipeItem
+                                Command="{Binding DetailsCommand, Source={x:RelativeSource AncestorType={x:Type viewModels:ContactsViewModel}, Mode=FindAncestorBindingContext}}"
+                                CommandParameter="{Binding .}"
+                                Text="פרטים" />
+                        </SwipeView.LeftItems>
+                        <Border
+                            Margin="5"
+                            Padding="10"
+                            BackgroundColor="White"
+                            Stroke="#E0E0E0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DetailsCommand, Source={x:RelativeSource AncestorType={x:Type viewModels:ContactsViewModel}, Mode=FindAncestorBindingContext}}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout HorizontalOptions="End">
+
+                                <VerticalStackLayout>
+                                    <Label FlowDirection="RightToLeft">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="שם: " TextColor="Blue" />
+                                                <Span Text="{Binding Name}" TextColor="Green" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label FlowDirection="RightToLeft">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="טלפון: " TextColor="Blue" />
+                                                <Span Text="{Binding Phone}" TextColor="Green" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <Image
+                                    Margin="10,0"
+                                    HeightRequest="30"
+                                    Source="{Binding ImgPath}" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

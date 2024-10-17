@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="ContactsMauiApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ContactsMauiApp"
+    xmlns:views="clr-namespace:ContactsMauiApp.Views"
+    Title="ContactsMauiApp"
+    Shell.FlyoutBehavior="Disabled">
+
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:ContactsPage}"
+        Route="MainPage" />
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="FormStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="BackgroundColor" Value="AntiqueWhite" />
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+</Shell>
