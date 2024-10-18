@@ -17,6 +17,7 @@ namespace ContactsMauiApp.ViewModels
 		public ObservableCollection<Model.Contact> Contacts { get; set; } = new();
 		public ICommand DeleteCommand { get; private set; }
 		public ICommand DetailsCommand { get; private set; }
+		public ICommand AddCommand { get; private set; }
 		private string filter = string.Empty;
 		
 		public ContactsViewModel(IContactService contactsService, IUserService userService)
@@ -26,6 +27,8 @@ namespace ContactsMauiApp.ViewModels
 
 			DeleteCommand = new Command<Model.Contact>((c) => {  if (contactsService.Delete(c)) Refresh(); });
 			DetailsCommand = new Command<Model.Contact>(async c => { await Shell.Current.GoToAsync("/ContactDetailsPage?id=" + c.Id); });
+			AddCommand = new Command(async () => await Shell.Current.GoToAsync("/ContactDetailsPage"));
+		
 			if (userService.CurrentUser == null) Shell.Current.GoToAsync(nameof(RegistrationPage));
 			//Refresh();
 		}

@@ -14,6 +14,7 @@
             Text="רשימת אנשי הקשר"
             VerticalOptions="Center" />
         <Entry Placeholder="filter" Text="{Binding Filter}" />
+        <Button Command="{Binding AddCommand}" Text="Add" />
         <CollectionView ItemsSource="{Binding Contacts}" SelectionMode="Single">
             <CollectionView.EmptyView>
                 <Label

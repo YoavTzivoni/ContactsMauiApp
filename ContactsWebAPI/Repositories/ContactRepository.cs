@@ -59,5 +59,17 @@ namespace ContactsWebAPI.Repositories
 			}
 			return false;
 		}
+
+		public bool UpdateImage(int contactId, string imageName)
+		{
+			var contact = contacts.Find(x => x.Id == contactId);
+			if (contact != null)
+			{
+				contact.ImgPath = imageName;
+				return true;
+			}
+			return false;
+		}
+
 	}
 }

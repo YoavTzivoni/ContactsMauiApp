@@ -7,5 +7,6 @@
 		Task<bool> AddContact(Model.Contact contact);
 		bool Delete(Model.Contact contact);
 		bool UpdateContact(Model.Contact contact);
+		Task<bool> UploadToyImage(FileResult photo, Model.Contact contact);
 	}
 }

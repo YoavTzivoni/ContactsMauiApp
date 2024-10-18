@@ -15,7 +15,7 @@ namespace ContactsMauiApp.Services
 		HttpClient client;//יטפל בבקשות ובתשובות מהשרת
 		JsonSerializerOptions options;//להגדיר את האופן שבו יתבצעו פעולות הסיריליאזציה והדה סירי
 
-		private const string URL = "https://8vp3j0n7-7028.euw.devtunnels.ms/api/Users/";//כתובת השרת באמצעות devtunnels		
+		private const string URL = "https://m9knbz40-7028.euw.devtunnels.ms/api/Users/";//כתובת השרת באמצעות devtunnels		
 		//private string URL = Environment.GetEnvironmentVariable("VS_TUNNEL_URL");
 		const string IMAGE_URL = "https://mhmdqzkj-7046.euw.devtunnels.ms/Images/";//כתובת שבו נמצאות התמונות בשרת
 

@@ -14,7 +14,10 @@
             <Switch IsToggled="{Binding EditMode}" ThumbColor="Blue" />
             <Label Text="{Binding EditMode}" />
         </HorizontalStackLayout>
-        <Image Source="{Binding Contact.ImgPath}" />
+        <ImageButton
+            Command="{Binding SelectImageCommand}"
+            Source="{Binding SelectedImage}"
+            WidthRequest="110" />
         <Border
             Margin="10"
             Padding="10"

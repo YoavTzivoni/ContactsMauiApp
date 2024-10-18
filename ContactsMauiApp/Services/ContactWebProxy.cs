@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace ContactsMauiApp.Services
 		private HttpClient client;//יטפל בבקשות ובתשובות מהשרת
 		private JsonSerializerOptions options;//להגדיר את האופן שבו יתבצעו פעולות הסיריליאזציה והדה סירי
 
-		private const string URL = "https://8vp3j0n7-7028.euw.devtunnels.ms/api/ContactsApi/";//כתובת השרת באמצעות devtunnels
+		private const string URL = "https://m9knbz40-7028.euw.devtunnels.ms/api/ContactsApi/";//כתובת השרת באמצעות devtunnels
 		//private string URL = Environment.GetEnvironmentVariable("VS_TUNNEL_URL");
 		public ContactWebProxy()
 		{
@@ -88,6 +89,33 @@ namespace ContactsMauiApp.Services
 			throw new NotImplementedException();
 		}
 
+		public async Task<bool> UploadToyImage(FileResult photo, Model.Contact contact)
+		{
+			byte[] streamBytes;
+			//take the photo and make it a byte array
+			//copy to the byte array
+			try
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					var stream = await photo.OpenReadAsync();
+					await stream.CopyToAsync(memoryStream);
+					streamBytes = memoryStream.ToArray();
+				}
+				var fileContent = new ByteArrayContent(streamBytes);
+				fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+				MultipartFormDataContent content = new MultipartFormDataContent();
+				//"photo" --זהה לשם הפרמטר של הפעולה בשרת שמייצגת את הקובץ
+				content.Add(fileContent, "photo", photo.FileName);
+				var response = await client.PutAsync(@$"{URL}Toys/Image/{contact.Id}", content);
+				if (response.IsSuccessStatusCode)
+				{
+					return true;
+				}
+			}
+			catch (Exception ex) { return false; }
+			return false;
+		}
 
 	}
 }

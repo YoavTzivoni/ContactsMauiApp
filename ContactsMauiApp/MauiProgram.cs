@@ -21,9 +21,9 @@ namespace ContactsMauiApp
 			builder.Services.AddSingleton<IContactService, ContactService>();
 			
 			//builder.Services.AddSingleton<IUserService, UserService>();
-			builder.Services.AddSingleton<IUserService, UserWebProxy>();
+			builder.Services.AddSingleton<IUserService, UserService>();
 
-			builder.Services.AddSingleton<ContactDetailsViewModel>();			
+			builder.Services.AddTransient<ContactDetailsViewModel>();			
 			builder.Services.AddSingleton<ContactsViewModel>();
 			
 			builder.Services.AddTransient<ContactDetailsPage>();

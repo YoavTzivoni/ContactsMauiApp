@@ -8,6 +8,7 @@ namespace ContactsMauiApp.Model
 {
 	public class Contact
 	{		
+		private static int contactId = 0;
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Phone { get; set; }
@@ -15,5 +16,6 @@ namespace ContactsMauiApp.Model
 		public string Address { get; set; }
 		public DateTime dateOfBirth { get; set; }
 		public string ImgPath { get; set; } = "face.png";
+		public Contact() { Id = ++contactId; }
 	}
 }

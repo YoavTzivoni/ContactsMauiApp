@@ -1,4 +1,5 @@
-﻿using ContactsMauiApp.Services;
+﻿
+using ContactsMauiApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,12 @@ namespace ContactsMauiApp.ViewModels
 			set { if (editMode != value) { editMode = value; } OnPropertyChanged(); }
 		}
 		public ICommand BackCommand { get; private set; }
+		public ICommand SelectImageCommand { get; private set; }
 		public ContactDetailsViewModel(IContactService contactService)
 		{
 			this.contactService = contactService;
 			BackCommand = new Command(() => { updateContactFromProperties(); Shell.Current.GoToAsync(".."); });
+			SelectImageCommand = new Command(async () => { await ChangeImage(); });
 		}
 		private int id = -1;
 		public int Id
@@ -36,6 +39,7 @@ namespace ContactsMauiApp.ViewModels
 					id = value;
 					Contact = contactService.GetContact(id).Result;
 					updateProperties();
+					editMode = true;
 				}
 			}
 		}
@@ -79,7 +83,12 @@ namespace ContactsMauiApp.ViewModels
 			get { return dateOfBirth; }
 			set { if (dateOfBirth != value) { dateOfBirth = value; OnPropertyChanged(); } }
 		}
-
+		private string selectedImage = "face.png";
+		public string SelectedImage
+		{
+			get { return selectedImage; }
+			set { if (selectedImage != value) {  selectedImage = value; OnPropertyChanged(); } }
+		}
 		private void updateProperties()
 		{
 			Name = Contact.Name;
@@ -87,6 +96,7 @@ namespace ContactsMauiApp.ViewModels
 			Email = Contact.Email;
 			Address = Contact.Address;
 			DateOfBirth = Contact.dateOfBirth;
+			SelectedImage = Contact.ImgPath;
 		}
 
 		private void updateContactFromProperties()
@@ -98,7 +108,74 @@ namespace ContactsMauiApp.ViewModels
 				Contact.Email = Email;
 				Contact.Address = Address;
 				Contact.dateOfBirth = DateOfBirth;
+				Contact.ImgPath = SelectedImage;
 			}
+			else
+			{
+				Contact = new Model.Contact();
+				Contact.Name = Name;
+				Contact.Phone = Phone;
+				Contact.Email = Email;
+				Contact.Address = Address;
+				Contact.dateOfBirth = DateOfBirth;
+				Contact.ImgPath = SelectedImage;
+				contactService.AddContact(Contact);
+			}
+		}
+		
+		private async Task ChangeImage()
+		{
+			var backup = SelectedImage;
+			//SelectedImage = "loadingforever.gif";
+			string choice = await Shell.Current.DisplayActionSheet("בחרו פעולה", cancel: "ביטול", null, "צלם", "בחר תמונה");
+
+			FileResult photo = null;
+
+			try
+			{
+				MediaPickerOptions options = new MediaPickerOptions() { Title = "חייך יפה למצלמה" };
+				switch (choice)
+				{
+					case "צלם":
+						if (MediaPicker.Default.IsCaptureSupported)
+						{
+
+							photo = await MediaPicker.Default.CapturePhotoAsync(options);
+						}
+
+						break;
+					case "בחר תמונה":
+						photo = await MediaPicker.Default.PickPhotoAsync(options);
+						break;
+					default:
+						SelectedImage = backup;
+
+						break;
+				}
+				//Add Method Upload Image
+				if (photo != null)
+				{
+					bool success = await contactService.UploadToyImage(photo, Contact);
+					if (success)
+					{
+						// save the file into local storage
+						string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+						using Stream sourceStream = await photo.OpenReadAsync();
+						using FileStream localFileStream = File.OpenWrite(localFilePath);
+
+						await sourceStream.CopyToAsync(localFileStream);
+						SelectedImage = localFilePath;
+					}
+					else SelectedImage = backup;
+				}
+
+
+
+			}
+			catch (Exception ex) { }
 		}
 	}
 }
+
+
