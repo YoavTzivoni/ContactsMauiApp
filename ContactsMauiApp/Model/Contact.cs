@@ -10,6 +10,7 @@ namespace ContactsMauiApp.Model
 	{		
 		private static int contactId = 0;
 		public int Id { get; set; }
+		public string FirebaseKey { get; set; }
 		public string Name { get; set; }
 		public string Phone { get; set; }
 		public string Email { get; set; }

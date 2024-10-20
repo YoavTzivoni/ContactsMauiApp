@@ -18,10 +18,10 @@ namespace ContactsMauiApp
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 					fonts.AddFont("MaterialSymbolsRounded.ttf", "MaterialSymbolsRounded");
 				});
-			builder.Services.AddSingleton<IContactService, ContactService>();
+			builder.Services.AddSingleton<IContactService, ContactFirebaseService>();
 			
 			//builder.Services.AddSingleton<IUserService, UserService>();
-			builder.Services.AddSingleton<IUserService, UserService>();
+			builder.Services.AddSingleton<IUserService, UserFirebaseService>();
 
 			builder.Services.AddTransient<ContactDetailsViewModel>();			
 			builder.Services.AddSingleton<ContactsViewModel>();
