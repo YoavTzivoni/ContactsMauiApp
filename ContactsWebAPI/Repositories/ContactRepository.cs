@@ -1,14 +1,16 @@
-﻿using ContactsWebAPI.Model;
+﻿using ContactsWebAPI.Data;
+using ContactsWebAPI.Model;
 
 namespace ContactsWebAPI.Repositories
 {
 	public class ContactRepository
 	{
 		private static int contact_id = 0;
-		List<Contact> contacts;
-
-		public ContactRepository()
+		private List<Contact> contacts;
+		private DataContext context;
+		public ContactRepository(DataContext context)
 		{
+			this.context = context;
 			InitContacts();
 		}
 
@@ -26,10 +28,14 @@ namespace ContactsWebAPI.Repositories
 			});
 		}
 
-		public List<Contact> GetContacts() { return contacts; }
-		public Contact GetContact(int id) { return contacts.Find((c) => c.Id == id); }
+		public List<Contact> GetContacts() { return context.Contacts.ToList(); /*contacts;*/ }
+		public Contact GetContact(int id) { return context.Contacts.Find(id); /*contacts.Find((c) => c.Id == id);*/ }
 		public Contact AddContact(Contact contact)
 		{
+			context.Contacts.Add(contact);
+			context.SaveChanges();
+			return contact;
+
 			//if (contacts.Find((c) => c.Id == contact_id) != null) return null;
 			contact.Id = ++contact_id;
 			contacts.Add(contact);
@@ -38,23 +44,25 @@ namespace ContactsWebAPI.Repositories
 
 		public Contact UpdateContact(int id, Contact contact)
 		{
-			Contact c = contacts.Find((c) => c.Id == contact_id);
+			Contact c = GetContact(id);// contacts.Find((c) => c.Id == contact_id);
 			if (c == null) return null;
 			c.Name = contact.Name;
 			c.Phone = contact.Phone;
 			c.Email = contact.Email;
 			c.Address = contact.Address;
 			c.dateOfBirth = contact.dateOfBirth;
+			context.SaveChanges();
 			return contact;
 
 		}
 
 		public bool DeleteContact(int id)
 		{
-			Contact contact = contacts.Find((c) => c.Id == contact_id);
+			Contact contact = GetContact(id);
 			if (contact != null)
 			{
-				contacts.Remove(contact);
+				context.Contacts.Remove(contact);
+				context.SaveChanges();
 				return true;
 			}
 			return false;
@@ -62,10 +70,11 @@ namespace ContactsWebAPI.Repositories
 
 		public bool UpdateImage(int contactId, string imageName)
 		{
-			var contact = contacts.Find(x => x.Id == contactId);
+			var contact = GetContact(contactId); // contacts.Find(x => x.Id == contactId);
 			if (contact != null)
 			{
 				contact.ImgPath = imageName;
+				context.SaveChanges();
 				return true;
 			}
 			return false;
